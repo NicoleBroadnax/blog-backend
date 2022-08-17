@@ -31,7 +31,9 @@ const connectToDB = async () => {
   try {
     await db.authenticate();
     console.log("Connected successfully");
-    db.sync(); //#6 sync by creating the tables based off our models if they don't exist already
+    await db.sync(); //#6 sync by creating the tables based off our models if they don't exist already
+    await createFirstUser();
+    await createSecondUser();
   } catch (error) {
     console.error(error);
     console.error("PANIC! DB PROBLEMS!");
