@@ -117,13 +117,13 @@ const createFirstUser = async () => {
 };
 
 const createSecondUser = async () => {
-	const users = await User.findAll();
-	if (users.length === 0) {
-		User.create({
-			username: "Nov",
-			password: bcrypt.hashSync("Hello2", 10),
-		});
-	}
+  const users = await User.findAll();
+  if (users.length === 0) {
+    User.create({
+      username: "Nov",
+      password: bcrypt.hashSync("Hello2", 10),
+    });
+  }
 };
 
 createFirstUser();
