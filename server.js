@@ -2,7 +2,15 @@
 const express = require("express");
 const server = express();
 const cors = require("cors");
-server.use(cors({ credentials: true, origin: "http://localhost:3000" }));
+server.use(
+  cors({
+    credentials: true,
+    origin: [
+      "http://localhost:3000",
+      "https://nicolebroadnax-blog-backend.herokuapp.com",
+    ],
+  })
+);
 const bodyParser = require("body-parser");
 server.use(bodyParser.json());
 const bcrypt = require("bcrypt");
@@ -81,8 +89,19 @@ server.get("/posts", async (req, res) => {
   res.send({ posts: await Post.findAll({ order: [["id", "DESC"]] }) });
 });
 
+server.get("/post/:id", async (req, res) => {
+  res.send({ post: await Post.findByPk(req.params.id) });
+});
+
+// if heroku, process.env.PORT will be provided
+let port = process.env.PORT;
+if (!port) {
+  // otherwise, fallback to localhost 3001
+  port = 3001;
+}
+
 //#9 run express API server in background to listen for incoming requests
-server.listen(3001, () => {
+server.listen(port, () => {
   console.log("Server running.");
 });
 
@@ -97,4 +116,15 @@ const createFirstUser = async () => {
   }
 };
 
+const createSecondUser = async () => {
+	const users = await User.findAll();
+	if (users.length === 0) {
+		User.create({
+			username: "Nov",
+			password: bcrypt.hashSync("Hello2", 10),
+		});
+	}
+};
+
 createFirstUser();
+createSecondUser();
